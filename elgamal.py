@@ -64,7 +64,9 @@ def is_prime(p):
 
 
 def random_sentence():
-    pass
+    with open("sentence.txt", 'r') as file:
+        s = file.readlines()
+    return random.choice(s).strip()    
 
 
 
