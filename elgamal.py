@@ -77,8 +77,15 @@ def encrypt(msg):
     global PRIME
     BETA_K = power(BETA, k, PRIME)
     for  m in msg:
-        c = ord(m) * BETA_K
-        CIPHER.append(c)
+        if k_different:
+            k = gen_key(PRIME)
+            y = power(ALPHA, k, PRIME)
+            BETA_K = power(BETA, k, PRIME)
+            c = ord(m) * BETA_K
+            CIPHER.append((c, y))
+        else:
+            c = ord(m) * BETA_K
+            CIPHER.append(c)
     return CIPHER
 
 
@@ -90,8 +97,14 @@ def decrypt():
     y_a = power(y, a, PRIME)
     message = ""
     for c in CIPHER:
-        m = chr(int(c / y_a))
-        message+=m
+        if k_different:
+
+            y_a = power(c[1], a, PRIME)
+            m = chr( int(c[0] / y_a))
+            message+=m
+        else:
+            m = chr(int(c / y_a))
+            message+=m
     print(message)
 
 
@@ -100,6 +113,7 @@ if __name__ == "__main__":
     prime_bits = 64
     key_bits = 16
     generator_bits = 32
+    k_different = False
     # PRIME = generate_prime(prime_bits)
     # ALPHA = random.randint(1, PRIME - 1)
     # PRIME, ALPHA = generate_prime_alpha(prime_bits)
